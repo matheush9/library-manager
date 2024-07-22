@@ -1,10 +1,10 @@
 package henrique.matheus.librarymanager.controller;
 
-import henrique.matheus.librarymanager.model.Book;
+import henrique.matheus.librarymanager.model.BookModel;
 
 public interface BookController {
-    public Book GetBook(String id);
-    public Boolean AddBook(Book book);
-    public Book UpdateBook(String id);
-    public Boolean DeleteBook(String id);
+    public BookModel getBook(String id);
+    public Boolean addBook(BookModel bookModel);
+    public BookModel updateBook(String id);
+    public Boolean deleteBook(String id);
 }
