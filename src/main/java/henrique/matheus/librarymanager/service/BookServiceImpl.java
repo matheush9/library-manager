@@ -1,25 +1,25 @@
 package henrique.matheus.librarymanager.service;
 
-import henrique.matheus.librarymanager.model.Book;
+import henrique.matheus.librarymanager.model.BookModel;
 
 public class BookServiceImpl implements BookService {
     @Override
-    public Book GetBook(String id) {
+    public BookModel getBookById(String id) {
         return null;
     }
 
     @Override
-    public Boolean AddBook(Book book) {
+    public Boolean addBook(BookModel bookModel) {
         return null;
     }
 
     @Override
-    public Book UpdateBook(String id) {
+    public BookModel updateBook(String id) {
         return null;
     }
 
     @Override
-    public Boolean DeleteBook(String id) {
+    public Boolean deleteBook(String id) {
         return null;
     }
 }

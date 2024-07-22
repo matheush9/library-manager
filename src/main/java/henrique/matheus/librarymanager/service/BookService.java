@@ -1,10 +1,10 @@
 package henrique.matheus.librarymanager.service;
 
-import henrique.matheus.librarymanager.model.Book;
+import henrique.matheus.librarymanager.model.BookModel;
 
 public interface BookService {
-    public Book GetBook(String id);
-    public Boolean AddBook(Book book);
-    public Book UpdateBook(String id);
-    public Boolean DeleteBook(String id);
+    public BookModel getBookById(String id);
+    public Boolean addBook(BookModel bookModel);
+    public BookModel updateBook(String id);
+    public Boolean deleteBook(String id);
 }
