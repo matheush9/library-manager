@@ -2,9 +2,9 @@ package henrique.matheus.librarymanager.model;
 
 import java.time.ZonedDateTime;
 
-public class Book extends BaseModel {
+public class BookModel extends BaseModel {
     public String name;
-    public Author author;
+    public AuthorModel authorModel;
     public int pages;
     public ZonedDateTime dateTimeReleased;
 }
