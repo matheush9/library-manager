@@ -12,9 +12,20 @@ public class BookModel extends BaseModel implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
+    @ManyToOne
+    @JoinColumn(name = "author_id")
+    private AuthorModel author;
     public String name;
     public int pages;
     public ZonedDateTime dateTimeReleased;
+
+    public AuthorModel getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(AuthorModel author) {
+        this.author = author;
+    }
 
     public String getName() {
         return name;
