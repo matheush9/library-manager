@@ -10,6 +10,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -44,6 +45,8 @@ public class AuthorServiceImpl implements AuthorService {
 
     public AuthorResponseDto addAuthor(AuthorRequestDto authorRequestDto) {
         var authorModel = new AuthorModel();
+        authorModel.setDateTimeCreated(ZonedDateTime.now());
+        authorModel.setDateTimeModified(ZonedDateTime.now());
         BeanUtils.copyProperties(authorRequestDto, authorModel);
         var newAuthorModel = authorRepository.save(authorModel);
         return authorMapper.authorModelToAuthorRepDto(newAuthorModel);
@@ -51,6 +54,7 @@ public class AuthorServiceImpl implements AuthorService {
 
     public AuthorResponseDto updateAuthor(UUID id, AuthorRequestDto authorRequestDto) {
         var authorModel = authorRepository.findById(id).get();
+        authorModel.setDateTimeModified(ZonedDateTime.now());
         BeanUtils.copyProperties(authorRequestDto, authorModel);
         authorRepository.save(authorModel);
         return authorMapper.authorModelToAuthorRepDto(authorModel);

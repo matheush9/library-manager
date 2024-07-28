@@ -10,6 +10,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -44,6 +45,8 @@ public class BookServiceImpl implements BookService {
 
     public BookResponseDto addBook(BookRequestDto bookRequestDto) {
         var bookModel = new BookModel();
+        bookModel.setDateTimeCreated(ZonedDateTime.now());
+        bookModel.setDateTimeModified(ZonedDateTime.now());
         BeanUtils.copyProperties(bookRequestDto, bookModel);
         var newBookModel = bookRepository.save(bookModel);
         return bookMapper.bookModelToBookRepDto(newBookModel);
@@ -51,6 +54,7 @@ public class BookServiceImpl implements BookService {
 
     public BookResponseDto updateBook(UUID id, BookRequestDto bookRequestDto) {
         var bookModel = bookRepository.findById(id).get();
+        bookModel.setDateTimeModified(ZonedDateTime.now());
         BeanUtils.copyProperties(bookRequestDto, bookModel);
         bookRepository.save(bookModel);
         return bookMapper.bookModelToBookRepDto(bookModel);
