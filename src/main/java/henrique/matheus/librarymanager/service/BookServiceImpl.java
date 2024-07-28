@@ -1,8 +1,9 @@
 package henrique.matheus.librarymanager.service;
 
-import henrique.matheus.librarymanager.dtos.AuthorDto;
-import henrique.matheus.librarymanager.dtos.BookDto;
-import henrique.matheus.librarymanager.model.AuthorModel;
+import henrique.matheus.librarymanager.dtos.BookRequestDto;
+import henrique.matheus.librarymanager.dtos.BookResponseDto;
+import henrique.matheus.librarymanager.dtos.BookSimpleDTO;
+import henrique.matheus.librarymanager.mappers.BookMapper;
 import henrique.matheus.librarymanager.model.BookModel;
 import henrique.matheus.librarymanager.repositories.BookRepository;
 import org.springframework.beans.BeanUtils;
@@ -17,34 +18,21 @@ import java.util.UUID;
 public class BookServiceImpl implements BookService {
 
     @Autowired
-    BookRepository bookRepository;
+    private BookRepository bookRepository;
 
     @Autowired
-    AuthorService authorService;
+    private BookMapper bookMapper;
 
-    public BookDto getBookById(UUID id) {
+    public BookResponseDto getBookById(UUID id) {
         var bookModel = bookRepository.findById(id).get();
-        return new BookDto(
-                bookModel.getName(),
-                bookModel.getPages(),
-                bookModel.getDateTimeReleased(),
-                bookModel.getDateTimeCreated(),
-                bookModel.getDateTimeModified(),
-                authorService.getAuthorById(bookModel.getAuthor().getId()));
+        return bookMapper.bookModelToBookRepDto(bookModel);
     }
 
-    public List<BookDto> getAllBooks() {
+    public List<BookSimpleDTO> getAllBooks() {
         var bookModels = bookRepository.findAll();
-        List<BookDto> bookDtos = new ArrayList<>();
+        List<BookSimpleDTO> bookDtos = new ArrayList<>();
         for (BookModel bookModel: bookModels) {
-            BookDto bookDto = new BookDto(
-                    bookModel.getName(),
-                    bookModel.getPages(),
-                    bookModel.getDateTimeReleased(),
-                    bookModel.getDateTimeCreated(),
-                    bookModel.getDateTimeModified(),
-                    authorService.getAuthorById(bookModel.getAuthor().getId())
-            );
+            var bookDto = bookMapper.bookModelToBookSimpleDto(bookModel);
             bookDtos.add(bookDto);
         }
         return bookDtos;
@@ -54,31 +42,18 @@ public class BookServiceImpl implements BookService {
         return bookRepository.existsById(id);
     }
 
-    public BookDto addBook(BookDto bookDto) {
+    public BookResponseDto addBook(BookRequestDto bookRequestDto) {
         var bookModel = new BookModel();
-        BeanUtils.copyProperties(bookDto, bookModel);
+        BeanUtils.copyProperties(bookRequestDto, bookModel);
         var newBookModel = bookRepository.save(bookModel);
-        return new BookDto(
-                newBookModel.getName(),
-                newBookModel.getPages(),
-                newBookModel.getDateTimeReleased(),
-                newBookModel.getDateTimeCreated(),
-                newBookModel.getDateTimeModified(),
-                null);
+        return bookMapper.bookModelToBookRepDto(newBookModel);
     }
 
-    public BookDto updateBook(UUID id, BookDto bookDto) {
+    public BookResponseDto updateBook(UUID id, BookRequestDto bookRequestDto) {
         var bookModel = bookRepository.findById(id).get();
-        BeanUtils.copyProperties(bookDto, bookModel);
+        BeanUtils.copyProperties(bookRequestDto, bookModel);
         bookRepository.save(bookModel);
-        return new BookDto(
-                bookModel.getName(),
-                bookModel.getPages(),
-                bookModel.getDateTimeReleased(),
-                bookModel.getDateTimeCreated(),
-                bookModel.getDateTimeModified(),
-                authorService.getAuthorById(bookModel.getAuthor().getId())
-        );
+        return bookMapper.bookModelToBookRepDto(bookModel);
     }
 
     public void deleteBook(UUID id) {
