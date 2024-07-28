@@ -1,6 +1,6 @@
 package henrique.matheus.librarymanager.controller;
 
-import henrique.matheus.librarymanager.model.AuthorModel;
+import henrique.matheus.librarymanager.dtos.AuthorDto;
 import henrique.matheus.librarymanager.service.AuthorService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,31 +23,29 @@ public class AuthorControllerImpl implements AuthorController {
         if (!authorExists) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Author not found");
         }
-        var authorModel = authorService.getAuthorById(id);
-        return ResponseEntity.status(HttpStatus.OK).body(authorModel);
+        var authorDto = authorService.getAuthorById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(authorDto);
     }
 
     @GetMapping("/authors")
-    public ResponseEntity<List<AuthorModel>> getAllAuthors() {
+    public ResponseEntity<List<AuthorDto>> getAllAuthors() {
         var authorList = authorService.getAllAuthors();
         return ResponseEntity.status(HttpStatus.OK).body(authorList);
     }
 
     @PostMapping("/authors")
-    public ResponseEntity<AuthorModel> addAuthor(@RequestBody AuthorModel authorModel) {
-        var newAuthorModel = new AuthorModel();
-        BeanUtils.copyProperties(authorModel, newAuthorModel);
-        return ResponseEntity.status(HttpStatus.CREATED).body(authorService.addAuthor(newAuthorModel));
+    public ResponseEntity<AuthorDto> addAuthor(@RequestBody AuthorDto authorDto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(authorService.addAuthor(authorDto));
     }
 
     @PutMapping("/authors/{id}")
     public ResponseEntity<Object> updateAuthor(@PathVariable(value="id") UUID id,
-                                               @RequestBody AuthorModel authorModel) {
+                                               @RequestBody AuthorDto authorDto) {
         var authorExists = authorService.authorExists(id);
         if (!authorExists) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Author not found");
         }
-        return ResponseEntity.status(HttpStatus.OK).body(authorService.updateAuthor(id, authorModel));
+        return ResponseEntity.status(HttpStatus.OK).body(authorService.updateAuthor(id, authorDto));
     }
 
     @DeleteMapping("/authors/{id}")
