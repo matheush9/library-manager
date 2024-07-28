@@ -1,6 +1,9 @@
 package henrique.matheus.librarymanager.service;
 
-import henrique.matheus.librarymanager.dtos.AuthorDto;
+import henrique.matheus.librarymanager.dtos.AuthorRequestDto;
+import henrique.matheus.librarymanager.dtos.AuthorResponseDto;
+import henrique.matheus.librarymanager.dtos.AuthorSimpleDto;
+import henrique.matheus.librarymanager.mappers.AuthorMapper;
 import henrique.matheus.librarymanager.model.AuthorModel;
 import henrique.matheus.librarymanager.repositories.AuthorRepository;
 import org.springframework.beans.BeanUtils;
@@ -17,62 +20,40 @@ public class AuthorServiceImpl implements AuthorService {
     @Autowired
     private AuthorRepository authorRepository;
 
-    public AuthorDto getAuthorById(UUID id) {
+    @Autowired
+    private AuthorMapper authorMapper;
+
+    public AuthorResponseDto getAuthorById(UUID id) {
         var authorModel = authorRepository.findById(id).get();
-        return new AuthorDto(
-            authorModel.getName(),
-            authorModel.getAge(),
-            authorModel.getCountry(),
-            authorModel.getDateTimeCreated(),
-            authorModel.getDateTimeModified(),
-            authorModel.getBooks());
+        return authorMapper.authorModelToAuthorRepDto(authorModel);
     }
 
-    public List<AuthorDto> getAllAuthors() {
+    public List<AuthorSimpleDto> getAllAuthors() {
         var authorModels = authorRepository.findAll();
-        List<AuthorDto> authorDtos = new ArrayList<>();
+        List<AuthorSimpleDto> authorRequestDtos = new ArrayList<>();
         for (AuthorModel authorModel: authorModels) {
-            AuthorDto authorDto = new AuthorDto(
-                                    authorModel.getName(),
-                                    authorModel.getAge(),
-                                    authorModel.getCountry(),
-                                    authorModel.getDateTimeCreated(),
-                                    authorModel.getDateTimeModified(),
-                                    authorModel.getBooks()
-            );
-            authorDtos.add(authorDto);
+            var authorDto = authorMapper.authorModelToAuthorSimpleDto(authorModel);
+            authorRequestDtos.add(authorDto);
         }
-        return authorDtos;
+        return authorRequestDtos;
     }
 
     public Boolean authorExists(UUID id) {
         return authorRepository.existsById(id);
     }
 
-    public AuthorDto addAuthor(AuthorDto authorDto) {
+    public AuthorResponseDto addAuthor(AuthorRequestDto authorRequestDto) {
         var authorModel = new AuthorModel();
-        BeanUtils.copyProperties(authorDto, authorModel);
+        BeanUtils.copyProperties(authorRequestDto, authorModel);
         var newAuthorModel = authorRepository.save(authorModel);
-        return new AuthorDto(
-                newAuthorModel.getName(),
-                newAuthorModel.getAge(),
-                newAuthorModel.getCountry(),
-                newAuthorModel.getDateTimeCreated(),
-                newAuthorModel.getDateTimeModified(),
-                newAuthorModel.getBooks());
+        return authorMapper.authorModelToAuthorRepDto(newAuthorModel);
     }
 
-    public AuthorDto updateAuthor(UUID id, AuthorDto authorDto) {
+    public AuthorResponseDto updateAuthor(UUID id, AuthorRequestDto authorRequestDto) {
         var authorModel = authorRepository.findById(id).get();
-        BeanUtils.copyProperties(authorDto, authorModel);
+        BeanUtils.copyProperties(authorRequestDto, authorModel);
         authorRepository.save(authorModel);
-        return new AuthorDto(
-                authorModel.getName(),
-                authorModel.getAge(),
-                authorModel.getCountry(),
-                authorModel.getDateTimeCreated(),
-                authorModel.getDateTimeModified(),
-                authorModel.getBooks());
+        return authorMapper.authorModelToAuthorRepDto(authorModel);
     }
 
     public void deleteAuthor(UUID id) {

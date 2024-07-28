@@ -9,16 +9,16 @@ import java.util.UUID;
 public class BaseModel {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    protected UUID Id;
+    protected UUID id;
     protected ZonedDateTime dateTimeCreated;
     protected ZonedDateTime dateTimeModified;
 
     public UUID getId() {
-        return Id;
+        return id;
     }
 
     public void setId(UUID id) {
-        Id = id;
+        this.id = id;
     }
 
     public ZonedDateTime getDateTimeCreated() {
