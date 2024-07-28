@@ -1,6 +1,6 @@
 package henrique.matheus.librarymanager.controller;
 
-import henrique.matheus.librarymanager.model.BookModel;
+import henrique.matheus.librarymanager.dtos.BookDto;
 import henrique.matheus.librarymanager.service.BookService;
 
 import org.springframework.beans.BeanUtils;
@@ -24,31 +24,29 @@ public class BookControllerImpl implements BookController {
         if (!bookExists) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Book not found");
         }
-        var bookModel = bookService.getBookById(id);
-        return ResponseEntity.status(HttpStatus.OK).body(bookModel);
+        var bookDto = bookService.getBookById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(bookDto);
     }
 
     @GetMapping("/books")
-    public ResponseEntity<List<BookModel>> getAllBooks() {
+    public ResponseEntity<List<BookDto>> getAllBooks() {
         var bookList = bookService.getAllBooks();
         return ResponseEntity.status(HttpStatus.OK).body(bookList);
     }
 
     @PostMapping("/books")
-    public ResponseEntity<BookModel> addBook(@RequestBody BookModel bookModel) {
-        var newBookModel = new BookModel();
-        BeanUtils.copyProperties(bookModel, newBookModel);
-        return ResponseEntity.status(HttpStatus.CREATED).body(bookService.addBook(newBookModel));
+    public ResponseEntity<BookDto> addBook(@RequestBody BookDto bookDto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(bookService.addBook(bookDto));
     }
 
     @PutMapping("/books/{id}")
     public ResponseEntity<Object> updateBook(@PathVariable(value="id") UUID id,
-                                             @RequestBody BookModel bookModel) {
+                                             @RequestBody BookDto bookDto) {
         var bookExists = bookService.bookExists(id);
         if (!bookExists) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Book not found");
         }
-        return ResponseEntity.status(HttpStatus.OK).body(bookService.updateBook(id, bookModel));
+        return ResponseEntity.status(HttpStatus.OK).body(bookService.updateBook(id, bookDto));
     }
 
     @DeleteMapping("/books/{id}")
