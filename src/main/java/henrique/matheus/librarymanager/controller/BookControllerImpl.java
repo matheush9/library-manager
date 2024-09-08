@@ -19,6 +19,7 @@ public class BookControllerImpl implements BookController {
     @Autowired
     BookService bookService;
 
+    @Override
     @GetMapping("/books/{id}")
     public ResponseEntity<Object> getBook(@PathVariable(value="id") UUID id) {
         var bookExists = bookService.bookExists(id);
@@ -29,17 +30,20 @@ public class BookControllerImpl implements BookController {
         return ResponseEntity.status(HttpStatus.OK).body(bookDto);
     }
 
+    @Override
     @GetMapping("/books")
     public ResponseEntity<List<BookSimpleDTO>> getAllBooks() {
         var bookList = bookService.getAllBooks();
         return ResponseEntity.status(HttpStatus.OK).body(bookList);
     }
 
+    @Override
     @PostMapping("/books")
     public ResponseEntity<BookResponseDto> addBook(@RequestBody BookRequestDto bookRequestDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(bookService.addBook(bookRequestDto));
     }
 
+    @Override
     @PutMapping("/books/{id}")
     public ResponseEntity<Object> updateBook(@PathVariable(value="id") UUID id,
                                              @RequestBody BookRequestDto bookRequestDto) {
@@ -50,6 +54,7 @@ public class BookControllerImpl implements BookController {
         return ResponseEntity.status(HttpStatus.OK).body(bookService.updateBook(id, bookRequestDto));
     }
 
+    @Override
     @DeleteMapping("/books/{id}")
     public ResponseEntity<Object> deleteBook(UUID id) {
         var bookExists = bookService.bookExists(id);

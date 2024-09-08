@@ -19,6 +19,7 @@ public class AuthorControllerImpl implements AuthorController {
     @Autowired
     private AuthorService authorService;
 
+    @Override
     @GetMapping("/authors/{id}")
     public ResponseEntity<Object> getAuthor(@PathVariable(value="id") UUID id) {
         var authorExists = authorService.authorExists(id);
@@ -29,17 +30,20 @@ public class AuthorControllerImpl implements AuthorController {
         return ResponseEntity.status(HttpStatus.OK).body(authorDto);
     }
 
+    @Override
     @GetMapping("/authors")
     public ResponseEntity<List<AuthorSimpleDto>> getAllAuthors() {
         var authorList = authorService.getAllAuthors();
         return ResponseEntity.status(HttpStatus.OK).body(authorList);
     }
 
+    @Override
     @PostMapping("/authors")
     public ResponseEntity<AuthorResponseDto> addAuthor(@RequestBody AuthorRequestDto authorRequestDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(authorService.addAuthor(authorRequestDto));
     }
 
+    @Override
     @PutMapping("/authors/{id}")
     public ResponseEntity<Object> updateAuthor(@PathVariable(value="id") UUID id,
                                                @RequestBody AuthorRequestDto authorRequestDto) {
@@ -50,6 +54,7 @@ public class AuthorControllerImpl implements AuthorController {
         return ResponseEntity.status(HttpStatus.OK).body(authorService.updateAuthor(id, authorRequestDto));
     }
 
+    @Override
     @DeleteMapping("/authors/{id}")
     public ResponseEntity<Object> deleteAuthor(@PathVariable(value="id") UUID id) {
         var authorExists = authorService.authorExists(id);

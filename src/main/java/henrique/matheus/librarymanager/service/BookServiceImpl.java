@@ -29,6 +29,7 @@ public class BookServiceImpl implements BookService {
         return bookMapper.bookModelToBookRepDto(bookModel);
     }
 
+    @Override
     public List<BookSimpleDTO> getAllBooks() {
         var bookModels = bookRepository.findAll();
         List<BookSimpleDTO> bookDtos = new ArrayList<>();
@@ -39,10 +40,12 @@ public class BookServiceImpl implements BookService {
         return bookDtos;
     }
 
+    @Override
     public Boolean bookExists(UUID id) {
         return bookRepository.existsById(id);
     }
 
+    @Override
     public BookResponseDto addBook(BookRequestDto bookRequestDto) {
         var bookModel = new BookModel();
         bookModel.setDateTimeCreated(ZonedDateTime.now());
@@ -52,6 +55,7 @@ public class BookServiceImpl implements BookService {
         return bookMapper.bookModelToBookRepDto(newBookModel);
     }
 
+    @Override
     public BookResponseDto updateBook(UUID id, BookRequestDto bookRequestDto) {
         var bookModel = bookRepository.findById(id).get();
         bookModel.setDateTimeModified(ZonedDateTime.now());
@@ -60,6 +64,7 @@ public class BookServiceImpl implements BookService {
         return bookMapper.bookModelToBookRepDto(bookModel);
     }
 
+    @Override
     public void deleteBook(UUID id) {
         bookRepository.deleteById(id);
     }
